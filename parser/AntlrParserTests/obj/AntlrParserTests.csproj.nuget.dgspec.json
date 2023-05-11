@@ -1,0 +1,144 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj": {}
+  },
+  "projects": {
+    "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj",
+        "projectName": "AntlrParser",
+        "projectPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj",
+        "packagesPath": "/home/m4rtin7/.nuget/packages/",
+        "outputPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/m4rtin7/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Antlr4.Runtime.Standard": {
+              "target": "Package",
+              "version": "[4.12.0, )"
+            },
+            "Json.Net": {
+              "target": "Package",
+              "version": "[1.0.33, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
+        "projectName": "AntlrParserTests",
+        "projectPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
+        "packagesPath": "/home/m4rtin7/.nuget/packages/",
+        "outputPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/m4rtin7/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj": {
+                "projectPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[2.2.7, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[2.2.7, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.11.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
