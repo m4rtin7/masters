@@ -1,4 +1,16 @@
-# Masters
+# Dynamický model prípadov použitia
+[PDF s textom práce](https://www.overleaf.com/read/sybmxbjsbzyv)
+## Cieľ
+Analyzujte vybraté metódy modelovania v softvérovom inžinierstve (napríklad
+Executable UML a Object Action Language), interaktívnej grafiky v Unity, ako
+aj existujúci prototyp animácie dynamiky UML modelu.
+Cieľom práce bude obohatiť existujúci prototyp modelovania softvérovej
+architektúry a jej funkcionality o dynamický model podľa OAL skriptu alebo
+programu v jazyku Python.
+
+## Popis projektu
+Pričinok `parser` obsahuje `C#` projekt, ktorý používa `ANTLR`. Program dokáže parsovaním vstupného súboru JSON, ktorý obsahuje prvky jazyka OAL popisujúce animaciu triedneho diagramu v programe `AnimArch`, vytvorit JSON súbor
+reprezentujúci zodpovedajúci sekvenčný diagram pre program `SQL Tunder`
 
 ## Postup prác
 
