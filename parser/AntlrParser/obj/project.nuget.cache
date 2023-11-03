@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vVWbkp58QmObg0EZh7Tk/R0Z8aWq2+l31cdOnF8J1cNOwo5GiuZPvsgnwg7UwLs349cbmvgTPrs0dhof7Z+tvA==",
+  "dgSpecHash": "VBuxwao5pjA+PoUNtndTjq8K8UrzCB2Vj5OEo3RYtxJiPBXFBPDlpvuYCop7rtq2VEkAdiqEYMa/byv+mualzw==",
   "success": true,
-  "projectFilePath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj",
+  "projectFilePath": "/home/m4rtin7/masters/parser/AntlrParser/AntlrParser.csproj",
   "expectedPackageFiles": [
     "/home/m4rtin7/.nuget/packages/antlr4.runtime.standard/4.12.0/antlr4.runtime.standard.4.12.0.nupkg.sha512",
     "/home/m4rtin7/.nuget/packages/json.net/1.0.33/json.net.1.0.33.nupkg.sha512"

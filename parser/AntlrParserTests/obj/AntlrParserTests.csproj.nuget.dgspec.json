@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj": {}
+    "/home/m4rtin7/masters/parser/AntlrParserTests/AntlrParserTests.csproj": {}
   },
   "projects": {
-    "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj": {
+    "/home/m4rtin7/masters/parser/AntlrParser/AntlrParser.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj",
+        "projectUniqueName": "/home/m4rtin7/masters/parser/AntlrParser/AntlrParser.csproj",
         "projectName": "AntlrParser",
-        "projectPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj",
+        "projectPath": "/home/m4rtin7/masters/parser/AntlrParser/AntlrParser.csproj",
         "packagesPath": "/home/m4rtin7/.nuget/packages/",
-        "outputPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/obj/",
+        "outputPath": "/home/m4rtin7/masters/parser/AntlrParser/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/m4rtin7/.nuget/NuGet/NuGet.Config"
@@ -62,18 +62,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.124/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj": {
+    "/home/m4rtin7/masters/parser/AntlrParserTests/AntlrParserTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
+        "projectUniqueName": "/home/m4rtin7/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
         "projectName": "AntlrParserTests",
-        "projectPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
+        "projectPath": "/home/m4rtin7/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
         "packagesPath": "/home/m4rtin7/.nuget/packages/",
-        "outputPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/obj/",
+        "outputPath": "/home/m4rtin7/masters/parser/AntlrParserTests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/m4rtin7/.nuget/NuGet/NuGet.Config"
@@ -88,8 +88,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj": {
-                "projectPath": "/home/m4rtin7/Desktop/masters/parser/AntlrParser/AntlrParser.csproj"
+              "/home/m4rtin7/masters/parser/AntlrParser/AntlrParser.csproj": {
+                "projectPath": "/home/m4rtin7/masters/parser/AntlrParser/AntlrParser.csproj"
               }
             }
           }
@@ -136,7 +136,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.124/RuntimeIdentifierGraph.json"
         }
       }
     }

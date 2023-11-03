@@ -8,31 +8,6 @@ grammar Oal;
 json
    : (codeLine)* EOF
    ;
-
-//obj
-//   : '{' pair (',' pair)* '}'
-//   | '{' '}'
-//   ;
-//
-//pair
-//   : STRING ':' value
-//   | name
-//   | code
-//   | animationName
-//   | methods
-//   ;
-//   
-//methods
-//    : '"Methods"' ':' arr
-//    ;
-//   
-//animationName
-//    : '"AnimationName"' ':' STRING
-//    ;
-//
-//code
-//    : '"Code"' ':' (codeLine)+
-//    ;
     
 className
     : NAME
@@ -49,6 +24,7 @@ functionName
 codeLine
     : instanceCreation
     | functionCall
+    | whileCycle
     ;
     
 instanceCreation
@@ -59,57 +35,11 @@ functionCall
     : instanceName'.'functionName'();'
     ;
     
-
-//arr
-//   : '[' value (',' value)* ']'
-//   | '[' ']'
-//   ;
-//
-//value
-//   : STRING
-//   | obj
-//   | arr
-//   ;
-
-//name 
-//    : '"Name"' ':' value
-//    ;
+whileCycle
+    : 'while (' STATEMENT ')' (instanceCreation | functionCall)* 'end while;'
+    ;
     
-//xmiId 
-//    : '"XmiId"' ':' value
-//    ;
-//    
-//xmiIdRef 
-//    : '"XmiIdRef"' ':' value
-//    ;
-//
-//lifeline
-//    : STRING ':' '"uml:Lifeline"'
-//    ;
-//    
-//message
-//    : STRING ':' '"uml:Message"'
-//    ;
-//
-//occurenceSpecification
-//    : STRING ':' '"uml:OccurrenceSpecification"'
-//    ;
-//   
-//covered
-//    : '"covered"' ':' value
-//    ;
-//    
-//receiveEvent
-//    : '"receiveEvent"' ':' value
-//    ;
-//    
-//sendEvent
-//    : '"sendEvent"' ':' value
-//    ;
 
-//NAME
-//   : '"'~('"')*':name"'
-//   ;
 
 NAME
     :   [a-zA-Z_#][a-zA-Z0-9_#]*
@@ -119,6 +49,13 @@ STRING
    : '"' (ESC | SAFECODEPOINT)* '"'
    ;
 
+STATEMENT
+    : (NAME | INT) OPERANT (NAME | INT)
+    ;
+    
+OPERANT
+    : '<' | '>' | '==' | '<=' | '>=' | '!='
+    ;
 fragment ESC
    : '\\' (["\\/bfnrt] | UNICODE)
    ;

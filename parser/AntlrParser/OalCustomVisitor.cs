@@ -59,6 +59,21 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         return base.VisitFunctionCall(context);
     }
 
+    public override object VisitWhileCycle(OalParser.WhileCycleContext context)
+    {
+        var statement = context.STATEMENT().GetText();
+        var functionCalls = context.functionCall();
+        var instanceCreations = context.instanceCreation();
+
+        var opaqueExpression = new OpaqueExpression(statement);
+        var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
+        var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
+
+        _seqObjects.Add(interactionConstraint);
+        _seqObjects.Add(opaqueExpression);
+        return base.VisitWhileCycle(context);
+    }
+
     private void AddLifelineIfDoesntExists(string lifelineName)
     {
         if (!_lifelines.ContainsKey(lifelineName))
@@ -78,6 +93,16 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         interaction.covered.Add(lifelineRef);
         interaction.ownedElement.Add(lifelineRef);
     }
+
+    private InteractionOperand CreateInteractionOperand(Ref _guard )
+    {
+        var interactionOperand = new InteractionOperand();
+        interactionOperand.guard = _guard;
+        interactionOperand.enclosingInteraction = new Ref(_interaction.XmiId);
+        
+        _seqObjects.Add(interactionOperand);
+        return interactionOperand;
+    } 
 
     private OccurrenceSpecification CreateOccurrenceSpecification(Lifeline lifeline, Interaction interaction)
     {
