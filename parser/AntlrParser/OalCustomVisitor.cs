@@ -94,15 +94,43 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         interaction.ownedElement.Add(lifelineRef);
     }
 
-    private InteractionOperand CreateInteractionOperand(Ref _guard )
+    private InteractionOperand CreateInteractionOperand(Ref guard )
     {
         var interactionOperand = new InteractionOperand();
-        interactionOperand.guard = _guard;
+        interactionOperand.guard = guard;
         interactionOperand.enclosingInteraction = new Ref(_interaction.XmiId);
-        
+        var covered = _lifelines.Values.Select((lifeline => new Ref(lifeline.XmiId))).ToList();
+        interactionOperand.covered = covered;
+
+        var occurrenceSpecs = _lifelines.Values.Select((lifeline => CreateOccurrenceSpecification(lifeline, _interaction))).ToList();
+        interactionOperand.fragment = occurrenceSpecs.Select(specification => new Ref(specification.XmiId)).ToList();
+        interactionOperand.ownedElement = interactionOperand.fragment;
+
+        var combinedFragment = CreateCombinedFragment(7, covered, new Ref(interactionOperand.XmiId));
+        interactionOperand.owner = new Ref(combinedFragment.XmiId);
+
         _seqObjects.Add(interactionOperand);
         return interactionOperand;
-    } 
+    }
+
+    private CombinedFragment CreateCombinedFragment(int interactionOperator, List<Ref> covered, Ref operand)
+    {
+        var combinedFragment = new CombinedFragment();
+        var interactionRef = new Ref(_interaction.XmiId);
+
+        combinedFragment.enclosingInteraction = interactionRef;
+        combinedFragment.owner = interactionRef;
+        combinedFragment.interactionOperator = interactionOperator;
+        combinedFragment.covered = covered;
+
+        var operandList = new List<Ref> { operand };
+        combinedFragment.operand = operandList;
+        combinedFragment.ownedElement = operandList;
+        
+        _interaction.fragment.Add(new Ref(combinedFragment.XmiId));
+        
+        return combinedFragment;
+    }
 
     private OccurrenceSpecification CreateOccurrenceSpecification(Lifeline lifeline, Interaction interaction)
     {
@@ -116,9 +144,9 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         occurrenceSpecification.owner = interactionRef;
 
         //add to interaction params
-        var occurrenceSpecRef = new Ref(occurrenceSpecification.XmiId);
-        interaction.fragment.Add(occurrenceSpecRef);
-        interaction.ownedElement.Add(occurrenceSpecRef);
+        // var occurrenceSpecRef = new Ref(occurrenceSpecification.XmiId);
+        // interaction.fragment.Add(occurrenceSpecRef);
+        // interaction.ownedElement.Add(occurrenceSpecRef);
         
         //add to objects
         _seqObjects.Add(occurrenceSpecification);

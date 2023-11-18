@@ -10,6 +10,7 @@ public class CombinedFragment: SeqObject
     public List<Ref> covered { get; set; }
     public Ref owner { get; set; }
     public List<Ref> ownedElement { get; set; }
+    public Ref enclosingInteraction { get; set; }
 
     public CombinedFragment()
     {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UTRULPOGm9pXSRXQ/bcMKxijG3ND29jyBQy5g9vP+tpDyDIu4OorGxxS9uMxE0cBa4TnVtTQGJNGvjy/v3MRhg==",
+  "dgSpecHash": "qMs6Nb588SdPIX4pt6Y5yJhZ5CbGmww3kVu4g3WwBrELtBhnflbhpnxC4wDywjJj35XAAbOG+72y0GX+BtFZ2A==",
   "success": true,
-  "projectFilePath": "/home/m4rtin7/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
+  "projectFilePath": "/home/m4rtin7/Desktop/masters/parser/AntlrParserTests/AntlrParserTests.csproj",
   "expectedPackageFiles": [
     "/home/m4rtin7/.nuget/packages/antlr4.runtime.standard/4.12.0/antlr4.runtime.standard.4.12.0.nupkg.sha512",
     "/home/m4rtin7/.nuget/packages/coverlet.collector/3.1.0/coverlet.collector.3.1.0.nupkg.sha512",
