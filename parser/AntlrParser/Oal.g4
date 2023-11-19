@@ -25,6 +25,7 @@ codeLine
     : instanceCreation
     | functionCall
     | whileCycle
+    | ifCondition
     ;
     
 instanceCreation
@@ -39,8 +40,18 @@ whileCycle
     : 'while (' STATEMENT ')' (instanceCreation | functionCall)* 'end while;'
     ;
     
-
-
+ifElseCondition
+    : 'else if (' STATEMENT ')' (instanceCreation | functionCall)* 'end else if;'
+    ;
+    
+elseCondition
+    : 'else' (instanceCreation | functionCall)* 'end else;'
+    ;
+    
+ifCondition
+    : 'if (' STATEMENT ')' (instanceCreation | functionCall)* 'end if;' (ifElseCondition)* (elseCondition)?
+    ;
+    
 NAME
     :   [a-zA-Z_#][a-zA-Z0-9_#]*
     ;

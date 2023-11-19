@@ -5,6 +5,7 @@ namespace AntlrParser;
 public class OalCustomVisitor: OalBaseVisitor<object>
 {
     private Dictionary<string, Lifeline> _lifelines;
+    private Dictionary<Lifeline, OccurrenceSpecification> _lifelineToOccuranceSpecification;
     private Lifeline _fromLifeline;
     private Dictionary<string, string> _instanceToLifeline = new Dictionary<string, string>();
     private List<SeqObject> _seqObjects = new List<SeqObject>();
@@ -15,6 +16,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         _lifelines = lifelines;
         _fromLifeline = fromLifeline;
         _interaction = interaction;
+        _lifelineToOccuranceSpecification = new Dictionary<Lifeline, OccurrenceSpecification>();
     }
 
     public override object VisitInstanceCreation(OalParser.InstanceCreationContext context)
@@ -65,13 +67,62 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         var functionCalls = context.functionCall();
         var instanceCreations = context.instanceCreation();
 
-        var opaqueExpression = new OpaqueExpression(statement);
+        var opaqueExpression = new OpaqueExpression("while " + statement);
         var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
         var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
+        
+        var combinedFragment = CreateCombinedFragment(7, interactionOperand.covered, new Ref(interactionOperand.XmiId));
+        interactionOperand.owner = new Ref(combinedFragment.XmiId);
 
         _seqObjects.Add(interactionConstraint);
         _seqObjects.Add(opaqueExpression);
         return base.VisitWhileCycle(context);
+    }
+
+    public override object VisitIfCondition(OalParser.IfConditionContext context)
+    {
+        var statement = context.STATEMENT().GetText();
+
+        var opaqueExpression = new OpaqueExpression("if " + statement);
+        var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
+        var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
+        
+        var combinedFragment = CreateCombinedFragment(2, interactionOperand.covered, new Ref(interactionOperand.XmiId));
+        interactionOperand.owner = new Ref(combinedFragment.XmiId);
+
+        foreach (var ifElseContext in context.ifElseCondition())
+        {
+            var ifElseOpaqueExpression = new OpaqueExpression("else if " + ifElseContext.STATEMENT().GetText());
+            var ifElseInteractionConstraint = new InteractionConstraint(ifElseOpaqueExpression.XmiId);
+            var ifElseInteractionOperand = CreateInteractionOperand(new Ref(ifElseInteractionConstraint.XmiId));
+            combinedFragment.operand.Add(new Ref(ifElseInteractionOperand.XmiId));
+            combinedFragment.ownedElement.Add(new Ref(ifElseInteractionOperand.XmiId));
+
+            ifElseInteractionOperand.owner = new Ref(combinedFragment.XmiId);
+
+            _seqObjects.Add(ifElseInteractionConstraint);
+            _seqObjects.Add(ifElseOpaqueExpression);
+        }
+
+        var elseContext = context.elseCondition();
+        if (elseContext != null)
+        {
+            var elseOpaqueExpression = new OpaqueExpression("else");
+            var elseInteractionConstraint = new InteractionConstraint(elseOpaqueExpression.XmiId);
+            var elseInteractionOperand = CreateInteractionOperand(new Ref(elseInteractionConstraint.XmiId));
+            combinedFragment.operand.Add(new Ref(elseInteractionOperand.XmiId));
+            combinedFragment.ownedElement.Add(new Ref(elseInteractionOperand.XmiId));
+            
+            elseInteractionOperand.owner = new Ref(combinedFragment.XmiId);
+            
+            _seqObjects.Add(elseInteractionConstraint);
+            _seqObjects.Add(elseOpaqueExpression);
+        }
+
+        _seqObjects.Add(interactionConstraint);
+        _seqObjects.Add(opaqueExpression);
+
+        return base.VisitIfCondition(context);
     }
 
     private void AddLifelineIfDoesntExists(string lifelineName)
@@ -106,8 +157,8 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         interactionOperand.fragment = occurrenceSpecs.Select(specification => new Ref(specification.XmiId)).ToList();
         interactionOperand.ownedElement = interactionOperand.fragment;
 
-        var combinedFragment = CreateCombinedFragment(7, covered, new Ref(interactionOperand.XmiId));
-        interactionOperand.owner = new Ref(combinedFragment.XmiId);
+        // var combinedFragment = CreateCombinedFragment(7, covered, new Ref(interactionOperand.XmiId));
+        // interactionOperand.owner = new Ref(combinedFragment.XmiId);
 
         _seqObjects.Add(interactionOperand);
         return interactionOperand;
@@ -126,32 +177,45 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         var operandList = new List<Ref> { operand };
         combinedFragment.operand = operandList;
         combinedFragment.ownedElement = operandList;
+
+        var combinedFragmentRef = new Ref(combinedFragment.XmiId);
+        _interaction.fragment.Add(combinedFragmentRef);
+        _interaction.ownedElement.Add(combinedFragmentRef);
         
-        _interaction.fragment.Add(new Ref(combinedFragment.XmiId));
+        _seqObjects.Add(combinedFragment);
         
         return combinedFragment;
     }
 
     private OccurrenceSpecification CreateOccurrenceSpecification(Lifeline lifeline, Interaction interaction)
     {
-        var lifelineRef = new Ref(lifeline.XmiId);
-        var interactionRef = new Ref(interaction.XmiId);
-        var occurrenceSpecification = new OccurrenceSpecification();
-        
-        //add to occurrenceSpec params
-        occurrenceSpecification.covered.Add(lifelineRef);
-        occurrenceSpecification.enclosingInteraction = interactionRef;
-        occurrenceSpecification.owner = interactionRef;
+        try
+        {
+            return _lifelineToOccuranceSpecification[lifeline];
+        }
+        catch
+        {
 
-        //add to interaction params
-        // var occurrenceSpecRef = new Ref(occurrenceSpecification.XmiId);
-        // interaction.fragment.Add(occurrenceSpecRef);
-        // interaction.ownedElement.Add(occurrenceSpecRef);
-        
-        //add to objects
-        _seqObjects.Add(occurrenceSpecification);
+            var lifelineRef = new Ref(lifeline.XmiId);
+            var interactionRef = new Ref(interaction.XmiId);
+            var occurrenceSpecification = new OccurrenceSpecification();
 
-        return occurrenceSpecification;
+            //add to occurrenceSpec params
+            occurrenceSpecification.covered.Add(lifelineRef);
+            occurrenceSpecification.enclosingInteraction = interactionRef;
+            occurrenceSpecification.owner = interactionRef;
+
+            //add to interaction params
+            // var occurrenceSpecRef = new Ref(occurrenceSpecification.XmiId);
+            // interaction.fragment.Add(occurrenceSpecRef);
+            // interaction.ownedElement.Add(occurrenceSpecRef);
+
+            //add to objects
+            _lifelineToOccuranceSpecification.Add(lifeline, occurrenceSpecification);
+            _seqObjects.Add(occurrenceSpecification);
+
+            return occurrenceSpecification;
+        }
     }
 
     private void CreateMessage(string name, OccurrenceSpecification toOccurrenceSpecification,

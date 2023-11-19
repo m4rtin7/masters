@@ -1,0 +1,15 @@
+{
+  "Code": "create object instance Class2_inst of Class2;\nwhile (a>5)\r\ncreate object instance Class2_inst of Class2;\nClass2_inst.hello();\n\r\nend while;\n",
+  "AnimationName": null,
+  "MethodsCodes": [
+    {
+      "Name": "Class1",
+      "Methods": [
+        {
+          "Name": "hello",
+          "Code": "if (x<5)\nClass.hello();\nend if;\nelse if (x>5)\nClass.hello2();\nend else if;\nelse\nClass.hello3();\nend else;"
+        }
+      ]
+    }
+  ]
+}
