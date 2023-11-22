@@ -5,6 +5,7 @@ namespace AntlrParser;
 public class OalCustomVisitor: OalBaseVisitor<object>
 {
     private Dictionary<string, Lifeline> _lifelines;
+    private Dictionary<OalParser.FunctionCallContext, string> _parent;
     private Dictionary<Lifeline, OccurrenceSpecification> _lifelineToOccuranceSpecification;
     private Lifeline _fromLifeline;
     private Dictionary<string, string> _instanceToLifeline = new Dictionary<string, string>();
@@ -17,6 +18,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         _fromLifeline = fromLifeline;
         _interaction = interaction;
         _lifelineToOccuranceSpecification = new Dictionary<Lifeline, OccurrenceSpecification>();
+        _parent = new Dictionary<OalParser.FunctionCallContext, string>();
     }
 
     public override object VisitInstanceCreation(OalParser.InstanceCreationContext context)
@@ -56,6 +58,15 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         var fromOccurrenceSpecification = CreateOccurrenceSpecification(_fromLifeline, _interaction);
         var toOccurrenceSpecification = CreateOccurrenceSpecification(toLifeline, _interaction);
 
+        var parent = getParent(context);
+
+        Console.WriteLine(parent.XmiId);
+
+        parent.fragment.Add(new Ref(toOccurrenceSpecification.XmiId));
+        parent.fragment.Add(new Ref(fromOccurrenceSpecification.XmiId));
+        parent.ownedElement.Add(new Ref(toOccurrenceSpecification.XmiId));
+        parent.ownedElement.Add(new Ref(fromOccurrenceSpecification.XmiId));
+
         CreateMessage(functionName,toOccurrenceSpecification, fromOccurrenceSpecification, _interaction);
 
         return base.VisitFunctionCall(context);
@@ -64,13 +75,14 @@ public class OalCustomVisitor: OalBaseVisitor<object>
     public override object VisitWhileCycle(OalParser.WhileCycleContext context)
     {
         var statement = context.STATEMENT().GetText();
-        var functionCalls = context.functionCall();
-        var instanceCreations = context.instanceCreation();
-
+        var codeLines = context.codeLine();
+        
         var opaqueExpression = new OpaqueExpression("while " + statement);
         var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
         var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
         
+        addCodelinesToParent(codeLines, interactionOperand.XmiId);
+
         var combinedFragment = CreateCombinedFragment(7, interactionOperand.covered, new Ref(interactionOperand.XmiId));
         interactionOperand.owner = new Ref(combinedFragment.XmiId);
 
@@ -82,11 +94,14 @@ public class OalCustomVisitor: OalBaseVisitor<object>
     public override object VisitIfCondition(OalParser.IfConditionContext context)
     {
         var statement = context.STATEMENT().GetText();
-
+        var codeLines = context.codeLine();
+        
         var opaqueExpression = new OpaqueExpression("if " + statement);
         var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
         var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
-        
+
+        addCodelinesToParent(codeLines, interactionOperand.XmiId);
+
         var combinedFragment = CreateCombinedFragment(2, interactionOperand.covered, new Ref(interactionOperand.XmiId));
         interactionOperand.owner = new Ref(combinedFragment.XmiId);
 
@@ -97,7 +112,9 @@ public class OalCustomVisitor: OalBaseVisitor<object>
             var ifElseInteractionOperand = CreateInteractionOperand(new Ref(ifElseInteractionConstraint.XmiId));
             combinedFragment.operand.Add(new Ref(ifElseInteractionOperand.XmiId));
             combinedFragment.ownedElement.Add(new Ref(ifElseInteractionOperand.XmiId));
-
+            
+            addCodelinesToParent(ifElseContext.codeLine(), ifElseInteractionOperand.XmiId);
+            
             ifElseInteractionOperand.owner = new Ref(combinedFragment.XmiId);
 
             _seqObjects.Add(ifElseInteractionConstraint);
@@ -112,6 +129,8 @@ public class OalCustomVisitor: OalBaseVisitor<object>
             var elseInteractionOperand = CreateInteractionOperand(new Ref(elseInteractionConstraint.XmiId));
             combinedFragment.operand.Add(new Ref(elseInteractionOperand.XmiId));
             combinedFragment.ownedElement.Add(new Ref(elseInteractionOperand.XmiId));
+            
+            addCodelinesToParent(elseContext.codeLine(), elseInteractionOperand.XmiId);
             
             elseInteractionOperand.owner = new Ref(combinedFragment.XmiId);
             
@@ -189,33 +208,26 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
     private OccurrenceSpecification CreateOccurrenceSpecification(Lifeline lifeline, Interaction interaction)
     {
-        try
-        {
-            return _lifelineToOccuranceSpecification[lifeline];
-        }
-        catch
-        {
+        var lifelineRef = new Ref(lifeline.XmiId);
+        var interactionRef = new Ref(interaction.XmiId);
+        var occurrenceSpecification = new OccurrenceSpecification();
 
-            var lifelineRef = new Ref(lifeline.XmiId);
-            var interactionRef = new Ref(interaction.XmiId);
-            var occurrenceSpecification = new OccurrenceSpecification();
+        //add to occurrenceSpec params
+        occurrenceSpecification.covered.Add(lifelineRef);
+        occurrenceSpecification.enclosingInteraction = interactionRef;
+        //owner of occurenceSpec is always interaction
+        occurrenceSpecification.owner = interactionRef;
 
-            //add to occurrenceSpec params
-            occurrenceSpecification.covered.Add(lifelineRef);
-            occurrenceSpecification.enclosingInteraction = interactionRef;
-            occurrenceSpecification.owner = interactionRef;
+        //add to interaction params
+        // var occurrenceSpecRef = new Ref(occurrenceSpecification.XmiId);
+        // interaction.fragment.Add(occurrenceSpecRef);
+        // interaction.ownedElement.Add(occurrenceSpecRef);
 
-            //add to interaction params
-            // var occurrenceSpecRef = new Ref(occurrenceSpecification.XmiId);
-            // interaction.fragment.Add(occurrenceSpecRef);
-            // interaction.ownedElement.Add(occurrenceSpecRef);
+        //add to objects
+        // _lifelineToOccuranceSpecification.Add(lifeline, occurrenceSpecification);
+        _seqObjects.Add(occurrenceSpecification);
 
-            //add to objects
-            _lifelineToOccuranceSpecification.Add(lifeline, occurrenceSpecification);
-            _seqObjects.Add(occurrenceSpecification);
-
-            return occurrenceSpecification;
-        }
+        return occurrenceSpecification;
     }
 
     private void CreateMessage(string name, OccurrenceSpecification toOccurrenceSpecification,
@@ -236,6 +248,29 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         interaction.ownedElement.Add(messageRef);
         
         _seqObjects.Add(message);
+    }
+
+    private SeqObject getParent(OalParser.FunctionCallContext codeLineContext)
+    {
+        try
+        {
+            var parentId = _parent[codeLineContext];
+            var parent = _seqObjects.Find(o => o.XmiId == parentId);
+            return parent ?? _interaction;
+        }
+        catch
+        {
+            return _interaction;
+        }
+    }
+
+    private void addCodelinesToParent(OalParser.CodeLineContext[] codeLineContexts, String parentId)
+    {
+        foreach (var codeLineContext in codeLineContexts)
+        {
+            _parent[codeLineContext.functionCall()] = parentId;
+        }
+        
     }
 
     public List<SeqObject> GetSeqObjects()

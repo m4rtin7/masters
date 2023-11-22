@@ -3,7 +3,6 @@ namespace AntlrParser.SeqDiagramObjects;
 public class CombinedFragment: SeqObject
 {
     public string name { get; set; }
-    public string XmiId { get; set; }
     public string XmiType;
     public int interactionOperator { get; set; }
     public List<Ref> operand { get; set; }

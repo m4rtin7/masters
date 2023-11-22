@@ -3,7 +3,6 @@ namespace AntlrParser.SeqDiagramObjects;
 public class InteractionConstraint: SeqObject
 {
     public string name { get; set; }
-    public string XmiId { get; set; }
     public string XmiType;
     public Ref specification;
 

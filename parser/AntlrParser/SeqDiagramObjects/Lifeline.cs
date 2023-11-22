@@ -3,7 +3,6 @@ namespace AntlrParser.SeqDiagramObjects;
 public class Lifeline: SeqObject
 {
     public string name { get; set; }
-    public string XmiId { get; set; }
     public string XmiType;
     public List<Ref> coveredBy { get; set; }
     public Ref? interaction { get; set; }

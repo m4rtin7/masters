@@ -4,7 +4,7 @@ using AntlrParser.AnimationObjects;
 using AntlrParser.SeqDiagramObjects;
 using Json.Net;
 
-using (StreamReader r = new StreamReader("ifElse.json"))
+using (StreamReader r = new StreamReader("animation.json"))
 {
     Dictionary<string, Lifeline> lifelines= new Dictionary<string,Lifeline>();
     Interaction interaction = new Interaction();

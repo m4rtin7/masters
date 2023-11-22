@@ -37,19 +37,19 @@ functionCall
     ;
     
 whileCycle
-    : 'while (' STATEMENT ')' (instanceCreation | functionCall)* 'end while;'
+    : 'while (' STATEMENT ')' (codeLine)* 'end while;'
     ;
     
 ifElseCondition
-    : 'else if (' STATEMENT ')' (instanceCreation | functionCall)* 'end else if;'
+    : 'else if (' STATEMENT ')' (codeLine)* 'end else if;'
     ;
     
 elseCondition
-    : 'else' (instanceCreation | functionCall)* 'end else;'
+    : 'else' (codeLine)* 'end else;'
     ;
     
 ifCondition
-    : 'if (' STATEMENT ')' (instanceCreation | functionCall)* 'end if;' (ifElseCondition)* (elseCondition)?
+    : 'if (' STATEMENT ')' (codeLine)* 'end if;' (ifElseCondition)* (elseCondition)?
     ;
     
 NAME
