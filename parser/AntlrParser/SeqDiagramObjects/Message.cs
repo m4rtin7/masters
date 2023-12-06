@@ -1,3 +1,5 @@
+using AntlrParser.Helpers;
+
 namespace AntlrParser.SeqDiagramObjects;
 
 public class Message: SeqObject
@@ -14,6 +16,6 @@ public class Message: SeqObject
     public Message(string _name)
     {
         name = _name;
-        XmiId = Guid.NewGuid().ToString();
+        XmiId = "Message__"+IdGenerator.instance.getId();
     }
 }

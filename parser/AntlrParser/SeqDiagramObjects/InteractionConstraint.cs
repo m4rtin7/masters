@@ -1,3 +1,5 @@
+using AntlrParser.Helpers;
+
 namespace AntlrParser.SeqDiagramObjects;
 
 public class InteractionConstraint: SeqObject
@@ -9,7 +11,7 @@ public class InteractionConstraint: SeqObject
     public InteractionConstraint(string _ref)
     {
         name = "";
-        XmiId = Guid.NewGuid().ToString();
+        XmiId = "InteractionConstraint__"+IdGenerator.instance.getId();
         XmiType = "uml:InteractionConstraint";
         specification = new Ref(_ref);
     }

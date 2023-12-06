@@ -37,19 +37,27 @@ functionCall
     ;
     
 whileCycle
-    : 'while (' STATEMENT ')' (codeLine)* 'end while;'
+    : 'while (' STATEMENT ')' 
+    (codeLine)* 
+    'end while;'
     ;
     
 ifElseCondition
-    : 'else if (' STATEMENT ')' (codeLine)* 'end else if;'
+    : 'else if (' STATEMENT ')' 
+    (codeLine)*
     ;
     
 elseCondition
-    : 'else' (codeLine)* 'end else;'
+    : 'else' 
+    (codeLine)* 
     ;
     
 ifCondition
-    : 'if (' STATEMENT ')' (codeLine)* 'end if;' (ifElseCondition)* (elseCondition)?
+    : 'if (' STATEMENT ')' 
+    (codeLine)* 
+    (ifElseCondition)* 
+    (elseCondition)? 
+    'end if;'
     ;
     
 NAME

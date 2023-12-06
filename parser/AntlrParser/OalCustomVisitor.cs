@@ -5,8 +5,9 @@ namespace AntlrParser;
 public class OalCustomVisitor: OalBaseVisitor<object>
 {
     private Dictionary<string, Lifeline> _lifelines;
-    private Dictionary<OalParser.FunctionCallContext, string> _parent;
-    private Dictionary<Lifeline, OccurrenceSpecification> _lifelineToOccuranceSpecification;
+    private Dictionary<OalParser.FunctionCallContext, string> _functionCallParent;
+    private Dictionary<OalParser.WhileCycleContext, string> _whileCycleParent;
+    private Dictionary<OalParser.IfConditionContext, string> _IfConditionParent;
     private Lifeline _fromLifeline;
     private Dictionary<string, string> _instanceToLifeline = new Dictionary<string, string>();
     private List<SeqObject> _seqObjects = new List<SeqObject>();
@@ -17,8 +18,9 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         _lifelines = lifelines;
         _fromLifeline = fromLifeline;
         _interaction = interaction;
-        _lifelineToOccuranceSpecification = new Dictionary<Lifeline, OccurrenceSpecification>();
-        _parent = new Dictionary<OalParser.FunctionCallContext, string>();
+        _functionCallParent = new Dictionary<OalParser.FunctionCallContext, string>();
+        _whileCycleParent = new Dictionary<OalParser.WhileCycleContext, string>();
+        _IfConditionParent = new Dictionary<OalParser.IfConditionContext, string>();
     }
 
     public override object VisitInstanceCreation(OalParser.InstanceCreationContext context)
@@ -58,7 +60,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         var fromOccurrenceSpecification = CreateOccurrenceSpecification(_fromLifeline, _interaction);
         var toOccurrenceSpecification = CreateOccurrenceSpecification(toLifeline, _interaction);
 
-        var parent = getParent(context);
+        var parent = getFunctionCallParent(context);
 
         Console.WriteLine(parent.XmiId);
 
@@ -86,6 +88,14 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         var combinedFragment = CreateCombinedFragment(7, interactionOperand.covered, new Ref(interactionOperand.XmiId));
         interactionOperand.owner = new Ref(combinedFragment.XmiId);
 
+        var parent = getWhileCycleParent(context);
+        parent.fragment.Add(new Ref(combinedFragment.XmiId));
+        parent.ownedElement.Add(new Ref(combinedFragment.XmiId));
+
+        // var parentRef = new Ref(parent.XmiId);
+        // combinedFragment.enclosingInteraction = parentRef;
+        // combinedFragment.owner = parentRef;
+
         _seqObjects.Add(interactionConstraint);
         _seqObjects.Add(opaqueExpression);
         return base.VisitWhileCycle(context);
@@ -104,6 +114,10 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
         var combinedFragment = CreateCombinedFragment(2, interactionOperand.covered, new Ref(interactionOperand.XmiId));
         interactionOperand.owner = new Ref(combinedFragment.XmiId);
+        
+        var parent = getIfConditionParent(context);
+        parent.fragment.Add(new Ref(combinedFragment.XmiId));
+        parent.ownedElement.Add(new Ref(combinedFragment.XmiId));
 
         foreach (var ifElseContext in context.ifElseCondition())
         {
@@ -169,11 +183,11 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         var interactionOperand = new InteractionOperand();
         interactionOperand.guard = guard;
         interactionOperand.enclosingInteraction = new Ref(_interaction.XmiId);
-        var covered = _lifelines.Values.Select((lifeline => new Ref(lifeline.XmiId))).ToList();
+        var covered = _lifelines.Values.Select((lifeline => new Ref(lifeline.XmiId))).ToHashSet();
         interactionOperand.covered = covered;
 
         var occurrenceSpecs = _lifelines.Values.Select((lifeline => CreateOccurrenceSpecification(lifeline, _interaction))).ToList();
-        interactionOperand.fragment = occurrenceSpecs.Select(specification => new Ref(specification.XmiId)).ToList();
+        interactionOperand.fragment = occurrenceSpecs.Select(specification => new Ref(specification.XmiId)).ToHashSet();
         interactionOperand.ownedElement = interactionOperand.fragment;
 
         // var combinedFragment = CreateCombinedFragment(7, covered, new Ref(interactionOperand.XmiId));
@@ -183,7 +197,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         return interactionOperand;
     }
 
-    private CombinedFragment CreateCombinedFragment(int interactionOperator, List<Ref> covered, Ref operand)
+    private CombinedFragment CreateCombinedFragment(int interactionOperator, HashSet<Ref> covered, Ref operand)
     {
         var combinedFragment = new CombinedFragment();
         var interactionRef = new Ref(_interaction.XmiId);
@@ -193,13 +207,13 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         combinedFragment.interactionOperator = interactionOperator;
         combinedFragment.covered = covered;
 
-        var operandList = new List<Ref> { operand };
+        var operandList = new HashSet<Ref> { operand };
         combinedFragment.operand = operandList;
         combinedFragment.ownedElement = operandList;
 
         var combinedFragmentRef = new Ref(combinedFragment.XmiId);
-        _interaction.fragment.Add(combinedFragmentRef);
-        _interaction.ownedElement.Add(combinedFragmentRef);
+        // _interaction.fragment.Add(combinedFragmentRef);
+        // _interaction.ownedElement.Add(combinedFragmentRef);
         
         _seqObjects.Add(combinedFragment);
         
@@ -250,25 +264,53 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         _seqObjects.Add(message);
     }
 
-    private SeqObject getParent(OalParser.FunctionCallContext codeLineContext)
+    private SeqObject getFunctionCallParent(OalParser.FunctionCallContext codeLineContext)
     {
-        try
+
+        if (_functionCallParent.ContainsKey(codeLineContext))
         {
-            var parentId = _parent[codeLineContext];
+            var parentId = _functionCallParent[codeLineContext];
+            return _seqObjects.Find(o => o.XmiId == parentId);
+        }
+
+        return _interaction;
+    }
+    
+    private SeqObject getWhileCycleParent(OalParser.WhileCycleContext whileCycleContext)
+    {
+        if (_whileCycleParent.ContainsKey(whileCycleContext))
+        {
+            var parentId = _whileCycleParent[whileCycleContext];
             var parent = _seqObjects.Find(o => o.XmiId == parentId);
-            return parent ?? _interaction;
+            return  parent == null ? _interaction : parent;
         }
-        catch
+
+        return _interaction;
+    }
+    
+    private SeqObject getIfConditionParent(OalParser.IfConditionContext ifConditionContext)
+    {
+        if (_IfConditionParent.ContainsKey(ifConditionContext))
         {
-            return _interaction;
+            var parentId = _IfConditionParent[ifConditionContext];
+            var parent = _seqObjects.Find(o => o.XmiId == parentId);
+            return  parent == null ? _interaction : parent;
         }
+
+        return _interaction;
     }
 
     private void addCodelinesToParent(OalParser.CodeLineContext[] codeLineContexts, String parentId)
     {
         foreach (var codeLineContext in codeLineContexts)
         {
-            _parent[codeLineContext.functionCall()] = parentId;
+            var functionCall = codeLineContext.functionCall();
+            var ifCondition = codeLineContext.ifCondition();
+            var whileCycle = codeLineContext.whileCycle();
+            
+            if(functionCall != null) _functionCallParent[functionCall] = parentId;
+            if(ifCondition != null) _IfConditionParent[ifCondition] = parentId;
+            if(whileCycle != null) _whileCycleParent[whileCycle] = parentId;
         }
         
     }

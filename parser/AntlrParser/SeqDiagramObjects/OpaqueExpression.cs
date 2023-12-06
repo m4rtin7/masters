@@ -1,3 +1,5 @@
+using AntlrParser.Helpers;
+
 namespace AntlrParser.SeqDiagramObjects;
 
 public class OpaqueExpression: SeqObject
@@ -10,7 +12,7 @@ public class OpaqueExpression: SeqObject
     {
         name = "";
         body = _body;
-        XmiId = Guid.NewGuid().ToString();
+        XmiId = "OpaqueExpression__"+IdGenerator.instance.getId();
         XmiType = "uml:OpaqueExpression";
     }
 }
