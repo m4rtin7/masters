@@ -24,11 +24,14 @@ reprezentujúci zodpovedajúci sekvenčný diagram pre program `SQL Tunder`
 |marec 2023| Śtúdium súborov reprezentujúcich sekvnenčný diagram pre SQD Tunder a súborov reprezentujúcich animaciu v AnimArch, ručne produkovanie OAL kodu popisujúceho animaciu v AnimArch|
 |apríl 2023| Vytovrenie prvotného projektu pre ANTLR pre konvertovanie OAL kodu z nastroju AnimArch na súbor so sekvenčným diagramom pre program SQD_Tunder (prvé úspešné parsovanie OAL s ANTLR), hľadanie relevantných vedeckých článkov |
 |máj 2023| Pokračovanie v hľadaní a študovaní relevantných článkov, pokračovanie na prácach na projekte s ANTLR, príprava potrebných dokumentov pre projektový seminár|
+|september - november 2023| Implementácia možnosti generovať sekvenčý diagram obsahujúci rozne urovne vnorenia ALT, IF fragmentov (rekurzívne), študovanie podobných predošlych DP prác, písanie textu práce |
+|december 2023| Písanie textu práce, príprava materiálova na `Projektový seminár 2`, finálne úpravy ALT, IF fragmentov|
 
 
 ## Plán prác
 
 | Dátum | Popis |
 |-------|-------|
-| jún - august 2022 | Práca na projekte s ANTLR, plná automatizácia konverzie aj zložitejších štruktúr |
+| január - február 2024 | Dokončenie implementácie, testovanie, písanie práce |
+| marec - máj 2024 | Písanie práce, evaluácia |
 
