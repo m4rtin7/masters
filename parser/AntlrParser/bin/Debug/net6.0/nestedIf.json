@@ -7,7 +7,7 @@
       "Methods": [
         {
           "Name": "hello",
-          "Code": "create object instance Class of Class2;\nwhile (x<5)\nClass.hello();\nif (x<5)\nif (x<3)\nClass.hello();\nend if;\nend if;\nClass.hello();\nend while;\n"
+          "Code": "create object instance Class of Class2;\nwhile (x<5)\nself.hello();\nif (x<5)\nif (x<3)\nClass.hello();\nend if;\nend if;\nClass.hello();\nend while;\n"
         }
       ]
     }

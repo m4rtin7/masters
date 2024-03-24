@@ -97,4 +97,40 @@ public interface IOalVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitIfCondition([NotNull] OalParser.IfConditionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OalParser.forEach"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitForEach([NotNull] OalParser.ForEachContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OalParser.thread"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitThread([NotNull] OalParser.ThreadContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OalParser.parallel"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParallel([NotNull] OalParser.ParallelContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OalParser.object"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitObject([NotNull] OalParser.ObjectContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OalParser.objects"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitObjects([NotNull] OalParser.ObjectsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OalParser.params"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParams([NotNull] OalParser.ParamsContext context);
 }

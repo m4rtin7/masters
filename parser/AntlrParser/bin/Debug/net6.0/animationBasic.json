@@ -1,0 +1,24 @@
+{
+  "Code": "create object instance class2_1 of class2;\nclass2_1.method2();\ncreate object instance class3_1 of class3;\nclass3_1.method3();\n",
+  "AnimationName": "3classesAnim",
+  "MethodsCodes": [
+    {
+      "Name": "class1",
+      "Methods": [
+        {
+          "Name": "method1",
+          "Code": "create object instance class2_1 of class2;\nclass2_1.method2();\n"
+        }
+      ]
+    },
+    {
+      "Name": "class2",
+      "Methods": [
+        {
+          "Name": "method2",
+          "Code": "create object instance class3_1 of class3;\npar\nthread\nclass3_1.method3();\nend thread;\n\nthread\nclass3_1.method4();\nend thread;\nend par;\n"
+        }
+      ]
+    }
+  ]
+}

@@ -26,24 +26,26 @@ codeLine
     | functionCall
     | whileCycle
     | ifCondition
+    | parallel
+    | forEach
     ;
     
 instanceCreation
-    : 'create object instance ' instanceName ' of ' className ';'
+    : 'create object instance 'instanceName' of 'className';'
     ;
     
 functionCall
-    : instanceName'.'functionName'();'
+    : instanceName'.'functionName'('params');'
     ;
     
 whileCycle
-    : 'while (' STATEMENT ')' 
+    : 'while ' CONDITION  
     (codeLine)* 
     'end while;'
     ;
     
 ifElseCondition
-    : 'else if (' STATEMENT ')' 
+    : 'else if ' CONDITION 
     (codeLine)*
     ;
     
@@ -53,28 +55,62 @@ elseCondition
     ;
     
 ifCondition
-    : 'if (' STATEMENT ')' 
+    : 'if ' CONDITION  
     (codeLine)* 
     (ifElseCondition)* 
     (elseCondition)? 
     'end if;'
     ;
     
-NAME
-    :   [a-zA-Z_#][a-zA-Z0-9_#]*
+forEach
+    : 'for each ' object ' in 'objects
+    (codeLine)*
+    'end for;'
     ;
     
-STRING
-   : '"' (ESC | SAFECODEPOINT)* '"'
-   ;
+thread
+    : 'thread'
+    (codeLine)*
+    'end thread;'
+    ;
 
-STATEMENT
-    : (NAME | INT) OPERANT (NAME | INT)
+parallel
+    : 'par'
+    (thread)*
+    'end par;'
+    ;
+    
+object
+    : NAME
+    ;
+    
+objects
+    : NAME
+    | NAME'.'NAME
+    ;
+    
+params
+    : NAME
+    | NAME'.'NAME
+    ;
+      
+NAME
+    :[a-zA-Z_#][a-zA-Z0-9_#]*
+    ;
+    
+
+CONDITION
+    : '('~[()]+')'WS 
     ;
     
 OPERANT
     : '<' | '>' | '==' | '<=' | '>=' | '!='
     ;
+
+fragment WORD
+    : [a-zA-Z0-9><=!]+
+    ;
+
 fragment ESC
    : '\\' (["\\/bfnrt] | UNICODE)
    ;

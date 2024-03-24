@@ -37,14 +37,23 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         return base.VisitInstanceCreation(context);
     }
 
+    public override object VisitForEach(OalParser.ForEachContext context)
+    {
+        var objectName = context.@object().GetText();
+
+        return base.VisitForEach(context);
+    }
+
     public override object VisitFunctionCall(OalParser.FunctionCallContext context)
     {
         var functionName = context.functionName().GetText();
         var instanceName = context.instanceName().GetText();
-        var lifelineName = "";
+        string? lifelineName = null;
         try
         {
-            lifelineName = _instanceToLifeline[instanceName];
+            if (instanceName != "self"){
+                lifelineName = _instanceToLifeline[instanceName];
+            }
         }
         catch (Exception e)
         {
@@ -52,7 +61,11 @@ public class OalCustomVisitor: OalBaseVisitor<object>
             throw;
         }
 
-        var toLifeline = _lifelines[lifelineName];
+        var toLifeline = _fromLifeline;
+        
+        if(lifelineName != null) {
+            toLifeline = _lifelines[lifelineName];
+        }
 
         AddInteractionToLifeline(_fromLifeline, _interaction);
         AddInteractionToLifeline(toLifeline, _interaction);
@@ -76,16 +89,17 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
     public override object VisitWhileCycle(OalParser.WhileCycleContext context)
     {
-        var statement = context.STATEMENT().GetText();
+        var condition = context.CONDITION().GetText();
         var codeLines = context.codeLine();
         
-        var opaqueExpression = new OpaqueExpression("while " + statement);
+        var opaqueExpression = new OpaqueExpression("while " + condition);
         var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
         var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
         
         addCodelinesToParent(codeLines, interactionOperand.XmiId);
 
-        var combinedFragment = CreateCombinedFragment(7, interactionOperand.covered, new Ref(interactionOperand.XmiId));
+        var combinedFragment = CreateCombinedFragment(7, interactionOperand.covered);
+        combinedFragment.operand.Add(new Ref(interactionOperand.XmiId));
         interactionOperand.owner = new Ref(combinedFragment.XmiId);
 
         var parent = getWhileCycleParent(context);
@@ -101,18 +115,46 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         return base.VisitWhileCycle(context);
     }
 
+    public override object VisitParallel(OalParser.ParallelContext context)
+    {
+        var combinedFragment = CreateCombinedFragment(5, new HashSet<Ref>());
+        combinedFragment.covered =  _lifelines.Values.Select((lifeline => new Ref(lifeline.XmiId))).ToHashSet();
+
+        var threads = context.thread();
+        foreach (var thread in threads)
+        {
+            var threadOpaqueExpression = new OpaqueExpression("");
+            var threadInteractionConstraint = new InteractionConstraint(threadOpaqueExpression.XmiId);
+            var threadInteractionOperand = CreateInteractionOperand(new Ref(threadInteractionConstraint.XmiId));
+
+            combinedFragment.operand.Add(new Ref(threadInteractionOperand.XmiId));
+            combinedFragment.ownedElement.Add(new Ref(threadInteractionOperand.XmiId));
+            
+            addCodelinesToParent(thread.codeLine(), threadInteractionOperand.XmiId);
+
+            threadInteractionOperand.owner = new Ref(combinedFragment.XmiId);
+            
+            _seqObjects.Add(threadInteractionConstraint);
+            _seqObjects.Add(threadOpaqueExpression);
+        }
+        
+        
+        return base.VisitParallel(context);
+    }
+
     public override object VisitIfCondition(OalParser.IfConditionContext context)
     {
-        var statement = context.STATEMENT().GetText();
+        var condition = context.CONDITION().GetText();
         var codeLines = context.codeLine();
         
-        var opaqueExpression = new OpaqueExpression("if " + statement);
+        var opaqueExpression = new OpaqueExpression("if " + condition);
         var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
         var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
 
         addCodelinesToParent(codeLines, interactionOperand.XmiId);
 
-        var combinedFragment = CreateCombinedFragment(2, interactionOperand.covered, new Ref(interactionOperand.XmiId));
+        var combinedFragment = CreateCombinedFragment(2, interactionOperand.covered);
+        combinedFragment.operand.Add(new Ref(interactionOperand.XmiId));
         interactionOperand.owner = new Ref(combinedFragment.XmiId);
         
         var parent = getIfConditionParent(context);
@@ -121,7 +163,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
         foreach (var ifElseContext in context.ifElseCondition())
         {
-            var ifElseOpaqueExpression = new OpaqueExpression("else if " + ifElseContext.STATEMENT().GetText());
+            var ifElseOpaqueExpression = new OpaqueExpression("else if " + ifElseContext.CONDITION().GetText());
             var ifElseInteractionConstraint = new InteractionConstraint(ifElseOpaqueExpression.XmiId);
             var ifElseInteractionOperand = CreateInteractionOperand(new Ref(ifElseInteractionConstraint.XmiId));
             combinedFragment.operand.Add(new Ref(ifElseInteractionOperand.XmiId));
@@ -197,7 +239,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         return interactionOperand;
     }
 
-    private CombinedFragment CreateCombinedFragment(int interactionOperator, HashSet<Ref> covered, Ref operand)
+    private CombinedFragment CreateCombinedFragment(int interactionOperator, HashSet<Ref> covered)
     {
         var combinedFragment = new CombinedFragment();
         var interactionRef = new Ref(_interaction.XmiId);
@@ -207,13 +249,13 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         combinedFragment.interactionOperator = interactionOperator;
         combinedFragment.covered = covered;
 
-        var operandList = new HashSet<Ref> { operand };
+        var operandList = new HashSet<Ref>();
         combinedFragment.operand = operandList;
         combinedFragment.ownedElement = operandList;
 
         var combinedFragmentRef = new Ref(combinedFragment.XmiId);
-        // _interaction.fragment.Add(combinedFragmentRef);
-        // _interaction.ownedElement.Add(combinedFragmentRef);
+        _interaction.fragment.Add(combinedFragmentRef);
+        _interaction.ownedElement.Add(combinedFragmentRef);
         
         _seqObjects.Add(combinedFragment);
         

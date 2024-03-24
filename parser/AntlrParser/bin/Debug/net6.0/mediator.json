@@ -1,0 +1,23 @@
+{
+  "Code": "create object instance Class2_inst of Class2;\nwhile (a>5)\r\ncreate object instance Class2_inst of Class2;\nClass2_inst.hello();\n\r\nend while;\n",
+  "AnimationName": null,
+  "MethodsCodes": [
+    {
+      "Name": "A",
+      "Methods": [
+        {
+          "Name": "callB",
+          "Code": "create object instance B_inst of B;\nB_inst.funB();"
+        },
+        {
+          "Name": "callC",
+          "Code": "create object instance C_inst of C;\nC_inst.funB();"
+        },
+        {
+          "Name": "callBAgain",
+          "Code": "create object instance B_inst of B;\nB_inst.funB();"
+        }
+      ]
+    }
+  ]
+}

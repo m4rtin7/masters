@@ -140,4 +140,64 @@ public interface IOalListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitIfCondition([NotNull] OalParser.IfConditionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OalParser.forEach"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterForEach([NotNull] OalParser.ForEachContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OalParser.forEach"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitForEach([NotNull] OalParser.ForEachContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OalParser.thread"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterThread([NotNull] OalParser.ThreadContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OalParser.thread"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitThread([NotNull] OalParser.ThreadContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OalParser.parallel"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParallel([NotNull] OalParser.ParallelContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OalParser.parallel"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParallel([NotNull] OalParser.ParallelContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OalParser.object"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterObject([NotNull] OalParser.ObjectContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OalParser.object"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitObject([NotNull] OalParser.ObjectContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OalParser.objects"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterObjects([NotNull] OalParser.ObjectsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OalParser.objects"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitObjects([NotNull] OalParser.ObjectsContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="OalParser.params"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParams([NotNull] OalParser.ParamsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="OalParser.params"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParams([NotNull] OalParser.ParamsContext context);
 }
