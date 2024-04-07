@@ -1,0 +1,156 @@
+{
+  "Code": "create object instance Game_inst of Game;\nGame_inst.CreateLevel();\npar\nthread\nself.CreateHumanArmy();\nend thread;\nthread\nself.CreateElvenArmy();\nend thread;\nthread\nself.CreateTrollArmy();\nend thread;\nend par;\ncreate object instance HumanFactory_inst of HumanFactory;\nHumanFactory_inst.CreateWarrior();\nHumanFactory_inst.CreateWarrior();\nHumanFactory_inst.CreateWarrior();\nHumanFactory_inst.CreateRanger();\nHumanFactory_inst.CreateRanger();\nHumanFactory_inst.CreateMage();\ncreate object instance ElvenFactory_inst of ElvenFactory;\nElvenFactory_inst.CreateWarrior();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateMage();\ncreate object instance TrollFactory_inst of TrollFactory;\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateMage();\ncreate object instance HumanWarrior_inst of HumanWarrior;\nHumanWarrior_inst.HumanWarrior();\ncreate object instance HumanRanger_inst of HumanRanger;\nHumanRanger_inst.HumanRanger();\ncreate object instance HumanMage_inst of HumanMage;\nHumanMage_inst.HumanMage();\ncreate object instance ElvenWarrior_inst of ElvenWarrior;\nElvenWarrior_inst.ElvenWarrior();\ncreate object instance ElvenRanger_inst of ElvenRanger;\nElvenRanger_inst.ElvenRanger();\ncreate object instance ElvenMage_inst of ElvenMage;\nElvenMage_inst.ElvenMage();\ncreate object instance TrollWarrior_inst of TrollWarrior;\nTrollWarrior_inst.TrollWarrior();\ncreate object instance TrollMage_inst of TrollMage;\nTrollMage_inst.TrollMage();\n",
+  "AnimationName": null,
+  "StartMethod": "FirstMethod",
+  "MethodsCodes": [
+    {
+      "Name": "Client",
+      "Methods": [
+        {
+          "Name": "FirstMethod",
+          "Code": "create object instance Game_inst of Game;\nGame_inst.CreateLevel();\n"
+        }
+      ]
+    },
+    {
+      "Name": "Game",
+      "Methods": [
+        {
+          "Name": "CreateLevel",
+          "Code": "par\nthread\nself.CreateHumanArmy();\nend thread;\nthread\nself.CreateElvenArmy();\nend thread;\nthread\nself.CreateTrollArmy();\nend thread;\nend par;\n"
+        },
+        {
+          "Name": "CreateHumanArmy",
+          "Code": "create object instance HumanFactory_inst of HumanFactory;\nHumanFactory_inst.CreateWarrior();\nHumanFactory_inst.CreateWarrior();\nHumanFactory_inst.CreateWarrior();\nHumanFactory_inst.CreateRanger();\nHumanFactory_inst.CreateRanger();\nHumanFactory_inst.CreateMage();\n"
+        },
+        {
+          "Name": "CreateElvenArmy",
+          "Code": "create object instance ElvenFactory_inst of ElvenFactory;\nElvenFactory_inst.CreateWarrior();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateRanger();\nElvenFactory_inst.CreateMage();\n"
+        },
+        {
+          "Name": "CreateTrollArmy",
+          "Code": "create object instance TrollFactory_inst of TrollFactory;\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateWarrior();\nTrollFactory_inst.CreateMage();\n"
+        }
+      ]
+    },
+    {
+      "Name": "HumanFactory",
+      "Methods": [
+        {
+          "Name": "CreateWarrior",
+          "Code": "create object instance HumanWarrior_inst of HumanWarrior;\nHumanWarrior_inst.HumanWarrior();\n"
+        },
+        {
+          "Name": "CreateRanger",
+          "Code": "create object instance HumanRanger_inst of HumanRanger;\nHumanRanger_inst.HumanRanger();\n"
+        },
+        {
+          "Name": "CreateMage",
+          "Code": "create object instance HumanMage_inst of HumanMage;\nHumanMage_inst.HumanMage();\n"
+        }
+      ]
+    },
+    {
+      "Name": "HumanWarrior",
+      "Methods": [
+        {
+          "Name": "HumanWarrior",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "HumanRanger",
+      "Methods": [
+        {
+          "Name": "HumanRanger",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "HumanMage",
+      "Methods": [
+        {
+          "Name": "HumanMage",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "ElvenFactory",
+      "Methods": [
+        {
+          "Name": "CreateWarrior",
+          "Code": "create object instance ElvenWarrior_inst of ElvenWarrior;\nElvenWarrior_inst.ElvenWarrior();\n"
+        },
+        {
+          "Name": "CreateRanger",
+          "Code": "create object instance ElvenRanger_inst of ElvenRanger;\nElvenRanger_inst.ElvenRanger();\n"
+        },
+        {
+          "Name": "CreateMage",
+          "Code": "create object instance ElvenMage_inst of ElvenMage;\nElvenMage_inst.ElvenMage();\n"
+        }
+      ]
+    },
+    {
+      "Name": "ElvenWarrior",
+      "Methods": [
+        {
+          "Name": "ElvenWarrior",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "ElvenRanger",
+      "Methods": [
+        {
+          "Name": "ElvenRanger",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "ElvenMage",
+      "Methods": [
+        {
+          "Name": "ElvenMage",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "TrollFactory",
+      "Methods": [
+        {
+          "Name": "CreateWarrior",
+          "Code": "create object instance TrollWarrior_inst of TrollWarrior;\nTrollWarrior_inst.TrollWarrior();\n"
+        },
+        {
+          "Name": "CreateMage",
+          "Code": "create object instance TrollMage_inst of TrollMage;\nTrollMage_inst.TrollMage();\n"
+        }
+      ]
+    },
+    {
+      "Name": "TrollWarrior",
+      "Methods": [
+        {
+          "Name": "TrollWarrior",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "TrollMage",
+      "Methods": [
+        {
+          "Name": "TrollMage",
+          "Code": ""
+        }
+      ]
+    }
+  ]
+}

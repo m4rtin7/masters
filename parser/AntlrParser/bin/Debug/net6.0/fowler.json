@@ -1,113 +1,41 @@
 {
-  "Code": "",
-  "AnimationName": "Observer-VaccinationCase",
-  "StartClass": "Client",
-  "StartMethod": "StartCase",
+  "Code": "for each line item\nif (value > $10000)\ncreate object instance Careful_inst of Careful;\nCareful_inst.dispatch();\nelse\ncreate object instance Regular_inst of Regular;\nRegular_inst.dispatch();\nend if;\nend for;\nif (needs confirmation)\ncreate object instance Messenger_inst of Messenger;\nMessenger_inst.confirm();\nend if;\n",
+  "AnimationName": null,
+  "StartMethod": "FirstMethod",
   "MethodsCodes": [
     {
-      "Name": "Cat",
-      "SuperClass": "Observer",
-      "Attributes": ["Veterinarian", "IsVaccinated", "Name", "VaccinationDate"],
+      "Name": "Order",
       "Methods": [
         {
-          "Name": "ReceiveVaccine",
-          "Parameters": ["Date"],
-          "Code": "if (VaccinationDate==DATE)\nend if;\n\n\r\n"
-        },
+          "Name": "FirstMethod",
+          "Code": "for each line item\nif (value > $10000)\ncreate object instance Careful_inst of Careful;\nCareful_inst.dispatch();\nelse\ncreate object instance Regular_inst of Regular;\nRegular_inst.dispatch();\nend if;\nend for;\nif (needs confirmation)\ncreate object instance Messenger_inst of Messenger;\nMessenger_inst.confirm();\nend if;\n"
+        }
+      ]
+    },
+    {
+      "Name": "Careful",
+      "Methods": [
         {
-          "Name": "SetVaccinationDate",
-          "Parameters": ["Date"],
+          "Name": "dispatch",
           "Code": ""
         }
       ]
     },
     {
-      "Name": "Client",
-      "SuperClass": "",
-      "Attributes": [],
+      "Name": "Regular",
       "Methods": [
         {
-          "Name": "StartCase",
-          "Parameters": [],
-          "Code": "create object instance Vet of Veterinarian;\ncreate list Vet.RegisteredAnimals of Observer;\r\ncreate object instance Husky of Dog;\r\nHusky.Name=\"Husky\"\nVet.Register(Husky, \"1.4.2022\");\r\ncreate object instance PersianCat of Cat;\nVet.Register(PersianCat, \"2.4.2022\");\r\nVet.SetDate(\"1.4.2022\");\r\nVet.SetDate(\"2.4.2022\");\r"
-        }
-      ]
-    },
-    {
-      "Name": "Dog",
-      "SuperClass": "Observer",
-      "Attributes": ["Veterinarian", "IsVaccinated", "Name", "VaccinationDate"],
-      "Methods": [
-        {
-          "Name": "ReceiveVaccine",
-          "Parameters": ["Date"],
-          "Code": "if (VaccinationDate==DATE)\nend if;\r"
-        },
-        {
-          "Name": "SetVaccinationDate",
-          "Parameters": ["Date"],
+          "Name": "dispatch",
           "Code": ""
         }
       ]
     },
     {
-      "Name": "Observer",
-      "SuperClass": "",
-      "Attributes": [],
+      "Name": "Messenger",
       "Methods": [
         {
-          "Name": "ReceiveVaccine",
-          "Parameters": ["Date"],
+          "Name": "confirm",
           "Code": ""
-        }
-      ]
-    },
-    {
-      "Name": "Subject",
-      "SuperClass": "",
-      "Attributes": [],
-      "Methods": [
-        {
-          "Name": "Register",
-          "Parameters": ["Obs", "Date"],
-          "Code": ""
-        },
-        {
-          "Name": "Unregister",
-          "Parameters": ["Obs"],
-          "Code": ""
-        },
-        {
-          "Name": "VaccinateAnimals",
-          "Parameters": [],
-          "Code": ""
-        }
-      ]
-    },
-    {
-      "Name": "Veterinarian",
-      "SuperClass": "Subject",
-      "Attributes": ["CurrentDate", "RegisteredAnimals"],
-      "Methods": [
-        {
-          "Name": "Register",
-          "Parameters": ["Obs", "Date"],
-          "Code": "add Obs to self.RegisteredAnimals;\r\nObs.SetVaccinationDate(Date);\r\n"
-        },
-        {
-          "Name": "Unregister",
-          "Parameters": ["Obs"],
-          "Code": "remove Obs from self.RegisteredAnimals;\r\nObs.SetVaccinationDate(UNDEFINED);\r\n"
-        },
-        {
-          "Name": "VaccinateAnimals",
-          "Parameters": [],
-          "Code": "for each Animal in self.RegisteredAnimals\r\nAnimal.ReceiveVaccine(self.CurrentDate);\r\nend for;\r\n"
-        },
-        {
-          "Name": "SetDate",
-          "Parameters": ["Date"],
-          "Code": "self.VaccinateAnimals();\r\n"
         }
       ]
     }

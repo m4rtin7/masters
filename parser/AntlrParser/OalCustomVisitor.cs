@@ -7,20 +7,29 @@ public class OalCustomVisitor: OalBaseVisitor<object>
     private Dictionary<string, Lifeline> _lifelines;
     private Dictionary<OalParser.FunctionCallContext, string> _functionCallParent;
     private Dictionary<OalParser.WhileCycleContext, string> _whileCycleParent;
-    private Dictionary<OalParser.IfConditionContext, string> _IfConditionParent;
+    private Dictionary<OalParser.ForEachContext, string> _forEachParent;
+    private Dictionary<OalParser.IfConditionContext, string> _ifConditionParent;
     private Lifeline _fromLifeline;
     private Dictionary<string, string> _instanceToLifeline = new Dictionary<string, string>();
     private List<SeqObject> _seqObjects = new List<SeqObject>();
     private Interaction _interaction;
+    private Dictionary<string, List<Lifeline>> _functionCallsToLifelines;
 
-    public OalCustomVisitor(Dictionary<string, Lifeline> lifelines, Lifeline fromLifeline, Interaction interaction)
+    public OalCustomVisitor(Dictionary<string, Lifeline> lifelines, Lifeline fromLifeline, Interaction interaction, Dictionary<string, List<Lifeline>> functionCallsToLifelines)
     {
         _lifelines = lifelines;
         _fromLifeline = fromLifeline;
         _interaction = interaction;
         _functionCallParent = new Dictionary<OalParser.FunctionCallContext, string>();
         _whileCycleParent = new Dictionary<OalParser.WhileCycleContext, string>();
-        _IfConditionParent = new Dictionary<OalParser.IfConditionContext, string>();
+        _ifConditionParent = new Dictionary<OalParser.IfConditionContext, string>();
+        _forEachParent = new Dictionary<OalParser.ForEachContext, string>();
+        _functionCallsToLifelines = functionCallsToLifelines;
+        
+        foreach (var lifelineArray in _functionCallsToLifelines.Values)
+        {
+            lifelineArray.ForEach((lifeline => _lifelines[lifeline.name] = lifeline));
+        }
     }
 
     public override object VisitInstanceCreation(OalParser.InstanceCreationContext context)
@@ -30,7 +39,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         AddLifelineIfDoesntExists(className);
         if (instanceName != null)
         {
-            _instanceToLifeline.Add(instanceName, className);
+            _instanceToLifeline[instanceName] = className;
         }
         
 
@@ -39,7 +48,30 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
     public override object VisitForEach(OalParser.ForEachContext context)
     {
-        var objectName = context.@object().GetText();
+        var elementName = context.element().GetText();
+        var elements = context.elements().GetText();
+        var codeLines = context.codeLine();
+        
+        AddLifelineIfDoesntExists(elementName);
+        // var lifeline = _lifelines[elementName];
+        _instanceToLifeline[elementName] = elementName;
+        
+        var opaqueExpression = new OpaqueExpression("for each " + elementName + " in " + elements);
+        var interactionConstraint = new InteractionConstraint(opaqueExpression.XmiId);
+        var interactionOperand = CreateInteractionOperand(new Ref(interactionConstraint.XmiId));
+        
+        addCodelinesToParent(codeLines, interactionOperand.XmiId);
+
+        var combinedFragment = CreateCombinedFragment(7, interactionOperand.covered);
+        combinedFragment.operand.Add(new Ref(interactionOperand.XmiId));
+        interactionOperand.owner = new Ref(combinedFragment.XmiId);
+
+        var parent = getForEachParent(context);
+        parent.fragment.Add(new Ref(combinedFragment.XmiId));
+        parent.ownedElement.Add(new Ref(combinedFragment.XmiId));
+
+        _seqObjects.Add(interactionConstraint);
+        _seqObjects.Add(opaqueExpression);
 
         return base.VisitForEach(context);
     }
@@ -61,21 +93,29 @@ public class OalCustomVisitor: OalBaseVisitor<object>
             throw;
         }
 
-        var toLifeline = _fromLifeline;
+        var functionCall = context.GetText();
+        var fromLifeline = GetFromLifeline(functionCall);
+
+        if (fromLifeline == null)
+        {
+            return base.VisitFunctionCall(context);
+        }
+
+        var toLifeline = fromLifeline;
         
         if(lifelineName != null) {
             toLifeline = _lifelines[lifelineName];
         }
 
-        AddInteractionToLifeline(_fromLifeline, _interaction);
+        AddInteractionToLifeline(fromLifeline, _interaction);
         AddInteractionToLifeline(toLifeline, _interaction);
 
-        var fromOccurrenceSpecification = CreateOccurrenceSpecification(_fromLifeline, _interaction);
+        var fromOccurrenceSpecification = CreateOccurrenceSpecification(fromLifeline, _interaction);
         var toOccurrenceSpecification = CreateOccurrenceSpecification(toLifeline, _interaction);
 
         var parent = getFunctionCallParent(context);
 
-        Console.WriteLine(parent.XmiId);
+        // Console.WriteLine(parent.XmiId);
 
         parent.fragment.Add(new Ref(toOccurrenceSpecification.XmiId));
         parent.fragment.Add(new Ref(fromOccurrenceSpecification.XmiId));
@@ -202,6 +242,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
     private void AddLifelineIfDoesntExists(string lifelineName)
     {
+        Console.WriteLine(lifelineName);
         if (!_lifelines.ContainsKey(lifelineName))
         {
             _lifelines.Add(lifelineName, new Lifeline(lifelineName));
@@ -210,8 +251,10 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
     private void AddInteractionToLifeline(Lifeline lifeline, Interaction interaction)
     {
+        Console.WriteLine("XXXX");
         var interactionRef = new Ref(interaction.XmiId);
         var lifelineRef = new Ref(lifeline.XmiId);
+        
         lifeline.owner = interactionRef;
         lifeline.coveredBy.Add(interactionRef);
         lifeline.interaction = interactionRef;
@@ -329,12 +372,24 @@ public class OalCustomVisitor: OalBaseVisitor<object>
 
         return _interaction;
     }
+
+    private SeqObject getForEachParent(OalParser.ForEachContext forEachContext)
+    {
+        if (_forEachParent.ContainsKey(forEachContext))
+        {
+            var parentId = _forEachParent[forEachContext];
+            var parent = _seqObjects.Find(o => o.XmiId == parentId);
+            return  parent == null ? _interaction : parent;
+        }
+
+        return _interaction;
+    }
     
     private SeqObject getIfConditionParent(OalParser.IfConditionContext ifConditionContext)
     {
-        if (_IfConditionParent.ContainsKey(ifConditionContext))
+        if (_ifConditionParent.ContainsKey(ifConditionContext))
         {
-            var parentId = _IfConditionParent[ifConditionContext];
+            var parentId = _ifConditionParent[ifConditionContext];
             var parent = _seqObjects.Find(o => o.XmiId == parentId);
             return  parent == null ? _interaction : parent;
         }
@@ -349,12 +404,30 @@ public class OalCustomVisitor: OalBaseVisitor<object>
             var functionCall = codeLineContext.functionCall();
             var ifCondition = codeLineContext.ifCondition();
             var whileCycle = codeLineContext.whileCycle();
-            
+            var forEach = codeLineContext.forEach();
+
             if(functionCall != null) _functionCallParent[functionCall] = parentId;
-            if(ifCondition != null) _IfConditionParent[ifCondition] = parentId;
+            if(ifCondition != null) _ifConditionParent[ifCondition] = parentId;
             if(whileCycle != null) _whileCycleParent[whileCycle] = parentId;
+            if(forEach != null) _forEachParent[forEach] = parentId;
+
         }
         
+    }
+
+    private Lifeline? GetFromLifeline(string functionCall)
+    {
+        // Console.WriteLine(functionCall);
+        var lifelines = _functionCallsToLifelines[functionCall];
+        if (lifelines.Count < 1)
+        {
+            return null;
+        }
+        var lifeline = lifelines[0];
+        lifelines.RemoveAt(0);
+        _functionCallsToLifelines[functionCall] = lifelines;
+
+        return lifeline;
     }
 
     public List<SeqObject> GetSeqObjects()

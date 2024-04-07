@@ -175,7 +175,7 @@ public partial class OalBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// <return>The visitor result.</return>
 	public virtual Result VisitParallel([NotNull] OalParser.ParallelContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OalParser.object"/>.
+	/// Visit a parse tree produced by <see cref="OalParser.element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -183,9 +183,9 @@ public partial class OalBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitObject([NotNull] OalParser.ObjectContext context) { return VisitChildren(context); }
+	public virtual Result VisitElement([NotNull] OalParser.ElementContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OalParser.objects"/>.
+	/// Visit a parse tree produced by <see cref="OalParser.elements"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -193,7 +193,7 @@ public partial class OalBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitObjects([NotNull] OalParser.ObjectsContext context) { return VisitChildren(context); }
+	public virtual Result VisitElements([NotNull] OalParser.ElementsContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="OalParser.params"/>.
 	/// <para>

@@ -28,6 +28,7 @@ codeLine
     | ifCondition
     | parallel
     | forEach
+    | inicialization
     ;
     
 instanceCreation
@@ -35,7 +36,8 @@ instanceCreation
     ;
     
 functionCall
-    : instanceName'.'functionName'('params');'
+    : instanceName'.'functionName'('param*');'
+    | instanceName'.'functionName'();'
     ;
     
 whileCycle
@@ -63,7 +65,7 @@ ifCondition
     ;
     
 forEach
-    : 'for each ' object ' in 'objects
+    : 'for each ' element ' in 'elements
     (codeLine)*
     'end for;'
     ;
@@ -80,24 +82,31 @@ parallel
     'end par;'
     ;
     
-object
+inicialization
+    : NAME '=' NAME
+    | NAME'.'NAME '=' NAME';'
+    ;
+    
+element
     : NAME
     ;
     
-objects
+elements
     : NAME
     | NAME'.'NAME
     ;
     
-params
+param
     : NAME
     | NAME'.'NAME
+    | NAME','
+    | NAME'.'NAME','
     ;
       
 NAME
     :[a-zA-Z_#][a-zA-Z0-9_#]*
     ;
-    
+   
 
 CONDITION
     : '('~[()]+')'WS 

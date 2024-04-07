@@ -204,29 +204,29 @@ public partial class OalBaseListener : IOalListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitParallel([NotNull] OalParser.ParallelContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="OalParser.object"/>.
+	/// Enter a parse tree produced by <see cref="OalParser.element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterObject([NotNull] OalParser.ObjectContext context) { }
+	public virtual void EnterElement([NotNull] OalParser.ElementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="OalParser.object"/>.
+	/// Exit a parse tree produced by <see cref="OalParser.element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitObject([NotNull] OalParser.ObjectContext context) { }
+	public virtual void ExitElement([NotNull] OalParser.ElementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="OalParser.objects"/>.
+	/// Enter a parse tree produced by <see cref="OalParser.elements"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterObjects([NotNull] OalParser.ObjectsContext context) { }
+	public virtual void EnterElements([NotNull] OalParser.ElementsContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="OalParser.objects"/>.
+	/// Exit a parse tree produced by <see cref="OalParser.elements"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitObjects([NotNull] OalParser.ObjectsContext context) { }
+	public virtual void ExitElements([NotNull] OalParser.ElementsContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="OalParser.params"/>.
 	/// <para>The default implementation does nothing.</para>

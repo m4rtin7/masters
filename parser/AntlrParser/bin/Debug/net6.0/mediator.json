@@ -1,21 +1,36 @@
 {
-  "Code": "create object instance Class2_inst of Class2;\nwhile (a>5)\r\ncreate object instance Class2_inst of Class2;\nClass2_inst.hello();\n\r\nend while;\n",
+  "Code": "create object instance ClassB_inst of ClassB;\nClassB_inst.methodB1();\ncreate object instance ClassC_inst of ClassC;\nClassC_inst.methodC();\nClassB_inst.methodB2();\n",
   "AnimationName": null,
+  "StartMethod": "FirstMethod",
   "MethodsCodes": [
     {
-      "Name": "A",
+      "Name": "ClassA",
       "Methods": [
         {
-          "Name": "callB",
-          "Code": "create object instance B_inst of B;\nB_inst.funB();"
+          "Name": "FirstMethod",
+          "Code": "create object instance ClassB_inst of ClassB;\nClassB_inst.methodB1();\ncreate object instance ClassC_inst of ClassC;\nClassC_inst.methodC();\nClassB_inst.methodB2();\n"
+        }
+      ]
+    },
+    {
+      "Name": "ClassB",
+      "Methods": [
+        {
+          "Name": "methodB1",
+          "Code": ""
         },
         {
-          "Name": "callC",
-          "Code": "create object instance C_inst of C;\nC_inst.funB();"
-        },
+          "Name": "methodB2",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "ClassC",
+      "Methods": [
         {
-          "Name": "callBAgain",
-          "Code": "create object instance B_inst of B;\nB_inst.funB();"
+          "Name": "methodC",
+          "Code": ""
         }
       ]
     }

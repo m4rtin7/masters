@@ -1,0 +1,15 @@
+{
+  "Code": "create object instance Class2_inst of Class2;\nwhile (a>5)\r\ncreate object instance Class2_inst of Class2;\nClass2_inst.hello();\n\r\nend while;\n",
+  "AnimationName": null,
+  "MethodsCodes": [
+    {
+      "Name": "A",
+      "Methods": [
+        {
+          "Name": "funA",
+          "Code": "for each Animal in self.Animal\nAnimal.fun();\nend for;"
+        }
+      ]
+    }
+  ]
+}

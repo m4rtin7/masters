@@ -116,17 +116,17 @@ public interface IOalVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitParallel([NotNull] OalParser.ParallelContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OalParser.object"/>.
+	/// Visit a parse tree produced by <see cref="OalParser.element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitObject([NotNull] OalParser.ObjectContext context);
+	Result VisitElement([NotNull] OalParser.ElementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OalParser.objects"/>.
+	/// Visit a parse tree produced by <see cref="OalParser.elements"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitObjects([NotNull] OalParser.ObjectsContext context);
+	Result VisitElements([NotNull] OalParser.ElementsContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="OalParser.params"/>.
 	/// </summary>

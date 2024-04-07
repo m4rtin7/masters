@@ -4,5 +4,6 @@ public class Animation
 {
     public string Code;
     public string AnimationName;
-    public MethodCode[] MethodsCodes;
+    public string StartMethod;
+    public List<MethodCode> MethodsCodes;
 }

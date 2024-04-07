@@ -1,0 +1,38 @@
+{
+  "Code": "create object instance ClassB_inst of ClassB;\nClassB_inst.methodB();\ncreate object instance ClassC_inst of ClassC;\nClassC_inst.methodC();\ncreate object instance ClassA_inst of ClassA;\nClassA_inst.methodA();\n",
+  "AnimationName": null,
+  "StartMethod": "FirstMethod",
+  "MethodsCodes": [
+    {
+      "Name": "ClassA",
+      "Methods": [
+        {
+          "Name": "FirstMethod",
+          "Code": "create object instance ClassB_inst of ClassB;\nClassB_inst.methodB();\n"
+        },
+        {
+          "Name": "methodA",
+          "Code": ""
+        }
+      ]
+    },
+    {
+      "Name": "ClassB",
+      "Methods": [
+        {
+          "Name": "methodB",
+          "Code": "create object instance ClassC_inst of ClassC;\nClassC_inst.methodC();\n"
+        }
+      ]
+    },
+    {
+      "Name": "ClassC",
+      "Methods": [
+        {
+          "Name": "methodC",
+          "Code": "create object instance ClassA_inst of ClassA;\nClassA_inst.methodA();\n"
+        }
+      ]
+    }
+  ]
+}
