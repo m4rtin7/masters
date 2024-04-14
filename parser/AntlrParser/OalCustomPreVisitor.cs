@@ -13,8 +13,9 @@ public class OalCustomPreVisitor: OalBaseVisitor<object>
     private HashSet<string> _alreadyReplaced = new HashSet<string>();
     private Lifeline _lifeline;
     private List<Lifeline> _lifelines;
+    private Interaction _interaction;
 
-    public OalCustomPreVisitor(string code, List<MethodCode> methodCodes, string className, Dictionary<string, List<Lifeline>> functionCallToLifeline, List<Lifeline> lifelines)
+    public OalCustomPreVisitor(string code, List<MethodCode> methodCodes, string className, Dictionary<string, List<Lifeline>> functionCallToLifeline, List<Lifeline> lifelines, Interaction interaction)
     {
         _code = code;
         _methodCodes = methodCodes;
@@ -22,10 +23,11 @@ public class OalCustomPreVisitor: OalBaseVisitor<object>
         _instanceToClass["self"] = className;
         _functionCallToLifeline = functionCallToLifeline;
         _lifelines = lifelines;
+        _interaction = interaction;
         var currentLifeline = lifelines.Find((lifeline => lifeline.name == className));
         if (currentLifeline == null)
         {
-            var newLifeline = new Lifeline(className);
+            var newLifeline = new Lifeline(className, interaction);
             _lifeline = newLifeline;
             _lifelines.Add(newLifeline);
         }else
@@ -67,7 +69,7 @@ public class OalCustomPreVisitor: OalBaseVisitor<object>
 
         var functionCode = GetFunctionCode(className, functionName);
 
-        var visitor = new OalCustomPreVisitor(functionCode, _methodCodes, className, _functionCallToLifeline, _lifelines);
+        var visitor = new OalCustomPreVisitor(functionCode, _methodCodes, className, _functionCallToLifeline, _lifelines, _interaction);
         
         var inputStream = new AntlrInputStream(functionCode);
         var speakLexer = new OalLexer(inputStream);

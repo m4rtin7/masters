@@ -1,0 +1,25 @@
+{
+  "Code": "",
+  "AnimationName": "chainDiagramAnim",
+  "StartMethod": "funA",
+  "MethodsCodes": [
+    {
+      "Name": "A",
+      "Methods": [
+        {
+          "Name": "funA",
+          "Code": "create object instance inst_B of B;\ninst_B.funB();"
+        }
+      ]
+    },
+    {
+      "Name": "B",
+      "Methods": [
+        {
+          "Name": "funB",
+          "Code": "create object instance inst_C of C;\ninst_C.funC();"
+        }
+      ]
+    }
+  ]
+}

@@ -13,10 +13,13 @@ using Json.Net;
 // using (StreamReader r = new StreamReader("basicForEach.json"))
 // using (StreamReader r = new StreamReader("mediator.json"))
 // using (StreamReader r = new StreamReader("absFactory.json"))
-using (StreamReader r = new StreamReader("absFactoryPara.json"))
+// using (StreamReader r = new StreamReader("absFactoryPara.json"))
 // using (StreamReader r = new StreamReader("ChainOfResponsibility.json"))
+// using (StreamReader r = new StreamReader("factoryLukas.json"))
+// using (StreamReader r = new StreamReader("factoryLukasPara.json"))
 // using (StreamReader r = new StreamReader("Observer-vac.json"))
-
+// using (StreamReader r = new StreamReader("observerLukas.json"))
+using (StreamReader r = new StreamReader("moje/fowler.json"))
 {
     Dictionary<string, Lifeline> lifelines= new Dictionary<string,Lifeline>();
     Interaction interaction = new Interaction();
@@ -39,7 +42,7 @@ using (StreamReader r = new StreamReader("absFactoryPara.json"))
         }
     }
     
-    var v = new OalCustomPreVisitor(code, animation.MethodsCodes, startName, new Dictionary<string, List<Lifeline>>(), new List<Lifeline>());
+    var v = new OalCustomPreVisitor(code, animation.MethodsCodes, startName, new Dictionary<string, List<Lifeline>>(), new List<Lifeline>(), interaction);
     var inputStreamV = new AntlrInputStream(code);
     var speakLexerV = new OalLexer(inputStreamV);
     var commonTokenStreamV = new CommonTokenStream(speakLexerV);
@@ -53,7 +56,7 @@ using (StreamReader r = new StreamReader("absFactoryPara.json"))
     // {
     if (!lifelines.ContainsKey(startName))
     {
-        lifelines.Add(startName, new Lifeline(startName));
+        lifelines.Add(startName, new Lifeline(startName, interaction));
             
     }
     

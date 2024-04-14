@@ -9,7 +9,6 @@ public class OalCustomVisitor: OalBaseVisitor<object>
     private Dictionary<OalParser.WhileCycleContext, string> _whileCycleParent;
     private Dictionary<OalParser.ForEachContext, string> _forEachParent;
     private Dictionary<OalParser.IfConditionContext, string> _ifConditionParent;
-    private Lifeline _fromLifeline;
     private Dictionary<string, string> _instanceToLifeline = new Dictionary<string, string>();
     private List<SeqObject> _seqObjects = new List<SeqObject>();
     private Interaction _interaction;
@@ -18,7 +17,6 @@ public class OalCustomVisitor: OalBaseVisitor<object>
     public OalCustomVisitor(Dictionary<string, Lifeline> lifelines, Lifeline fromLifeline, Interaction interaction, Dictionary<string, List<Lifeline>> functionCallsToLifelines)
     {
         _lifelines = lifelines;
-        _fromLifeline = fromLifeline;
         _interaction = interaction;
         _functionCallParent = new Dictionary<OalParser.FunctionCallContext, string>();
         _whileCycleParent = new Dictionary<OalParser.WhileCycleContext, string>();
@@ -245,7 +243,7 @@ public class OalCustomVisitor: OalBaseVisitor<object>
         Console.WriteLine(lifelineName);
         if (!_lifelines.ContainsKey(lifelineName))
         {
-            _lifelines.Add(lifelineName, new Lifeline(lifelineName));
+            _lifelines.Add(lifelineName, new Lifeline(lifelineName, _interaction));
         }
     }
 
